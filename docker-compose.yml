@@ -1,21 +1,21 @@
-services:
-    web:
-        build: .
-        ports:
-            - "5000:5000"
-        volumes:
-            - .:/code
-        depends_on:
-            - redis
-    redis:
-        image: redis
+version: "3"
 
-    web2:
-      image: nginx
-      volumes:
-        - ./templates:/etc/nginx/templates
-      ports:
-        - "8080:80"
-      environment:
-        - NGINX_HOST=foobar.com
-        - NGINX_PORT=80
+services:
+  redis:
+    image: redis:buster
+
+  web:
+    build:
+      context: ./web/
+    ports:
+      - "8000:8000"
+    links:
+      - redis
+
+  nginx:
+    restart: always
+    build: ./nginx/
+    ports:
+      - "8080:8080"
+    links:
+      - web
