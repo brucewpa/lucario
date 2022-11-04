@@ -1,10 +1,5 @@
 pipeline{
     agent any
-    stage('build da imagem docker'){
-        steps{
-            sh 'docker build -t devops/app .'
-        }
-    }
     stage('build do compose'){
         steps{
             sh 'docker-compose up --build -d'
