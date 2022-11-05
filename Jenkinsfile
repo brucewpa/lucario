@@ -11,7 +11,14 @@ pipeline{
                 sh 'sleep 10'
             }
         }
-        node {
+        stage('testando aplicacao'){
+            steps{
+                sh 'chmod +x testapp.sh'
+                sh './testapp.sh'
+            }
+        }
+    }
+    node {
           stage('SCM') {
             checkout scm
           }
@@ -22,13 +29,5 @@ pipeline{
             }
           }
         }
-
-        stage('testando aplicacao'){
-            steps{
-                sh 'chmod +x testapp.sh'
-                sh './testapp.sh'
-            }
-        }
-    }
 }
 
