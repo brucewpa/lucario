@@ -12,13 +12,17 @@ pipeline{
             }
         }
 
-             stage('Scan') {
-              steps {
-                 withSonarQubeEnv(installationName: 'lucario') {
-                    sh './mvnw clean org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.0.2155:sonar'
-                }
-              }
+        stage('Scan') {
+          steps {
+             script{
+                scannerHome = tool 'lucario_scanner';
+             }
+             withSonarQubeEnv('lucario'){
+                sh "sonar-scanner -Dsonar.projectKey=lucario -Dsonar.sources=. -Dsonar.host.url=http://127.0.0.1:9000 -Dsonar.login=7b275f4954a4e414807fd74379f6f9b8edb8176f1"
+             }
             }
+          }
+        }
 
         stage('testando aplicacao'){
             steps{
