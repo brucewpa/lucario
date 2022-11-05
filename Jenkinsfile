@@ -13,9 +13,8 @@ pipeline{
         }
         stage('testando aplicacao'){
             steps{
-                sh '
-                chmod +x testapp.sh
-                testapp.sh'
+                sh 'chmod +x testapp.sh'
+                sh 'testapp.sh'
             }
         }
     }
