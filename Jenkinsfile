@@ -12,23 +12,13 @@ pipeline{
             }
         }
 
-        stage('SonarQube analysis') {
-            environment {
-              SCANNER_HOME = tool 'lucario-scanner'
+             stage('Scan') {
+              steps {
+                withSonarQubeEnv(installationName: 'lucario') {
+                  sh './mvnw clean org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.0.2155:sonar'
+                }
+              }
             }
-            steps {
-            withSonarQubeEnv(credentialsId: 'e9da566a-6fc8-45dc-9e24-3d41181d49a7', installationName: 'lucario') {
-                 sh '''$SCANNER_HOME/bin/sonar-scanner \
-                 -Dsonar.projectKey=lucario \
-                 -Dsonar.projectName=projectName \
-                 -Dsonar.sources=src/ \
-                 -Dsonar.java.binaries=target/classes/ \
-                 -Dsonar.exclusions=src/test/java/****/*.java \
-                 -Dsonar.java.libraries=/var/lib/jenkins/.m2/**/*.jar \
-                 -Dsonar.projectVersion=${BUILD_NUMBER}-${GIT_COMMIT_SHORT}'''
-               }
-             }
-        }
 
         stage('testando aplicacao'){
             steps{
