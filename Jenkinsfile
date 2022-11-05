@@ -11,14 +11,7 @@ pipeline{
                 sh 'sleep 10'
             }
         }
-        stage('testando aplicacao'){
-            steps{
-                sh 'chmod +x testapp.sh'
-                sh './testapp.sh'
-            }
-        }
-    }
-    node {
+
           stage('SCM') {
             checkout scm
           }
@@ -28,6 +21,14 @@ pipeline{
               sh "${scannerHome}/bin/sonar-scanner"
             }
           }
+
+        stage('testando aplicacao'){
+            steps{
+                sh 'chmod +x testapp.sh'
+                sh './testapp.sh'
+            }
         }
+    }
+
 }
 
