@@ -11,6 +11,18 @@ pipeline{
                 sh 'sleep 10'
             }
         }
+        node {
+          stage('SCM') {
+            checkout scm
+          }
+          stage('SonarQube Analysis') {
+            def scannerHome = tool 'SonarScanner';
+            withSonarQubeEnv() {
+              sh "${scannerHome}/bin/sonar-scanner"
+            }
+          }
+        }
+
         stage('testando aplicacao'){
             steps{
                 sh 'chmod +x testapp.sh'
