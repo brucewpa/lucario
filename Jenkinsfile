@@ -12,23 +12,30 @@ pipeline{
             }
         }
 
-          stage('SCM') {
-            checkout scm
-          }
-          stage('SonarQube Analysis') {
-            def scannerHome = tool 'SonarScanner';
-            withSonarQubeEnv() {
-              sh "${scannerHome}/bin/sonar-scanner"
+        stage('SonarQube analysis') {
+            environment {
+              SCANNER_HOME = tool 'lucario-scanner'
             }
-          }
+            steps {
+            withSonarQubeEnv(credentialsId: 'e9da566a-6fc8-45dc-9e24-3d41181d49a7', installationName: 'lucario') {
+                 sh '''$SCANNER_HOME/bin/sonar-scanner \
+                 -Dsonar.projectKey=lucario \
+                 -Dsonar.projectName=projectName \
+                 -Dsonar.sources=src/ \
+                 -Dsonar.java.binaries=target/classes/ \
+                 -Dsonar.exclusions=src/test/java/****/*.java \
+                 -Dsonar.java.libraries=/var/lib/jenkins/.m2/**/*.jar \
+                 -Dsonar.projectVersion=${BUILD_NUMBER}-${GIT_COMMIT_SHORT}'''
+               }
+             }
+        }
 
         stage('testando aplicacao'){
             steps{
-                sh 'chmod +x testapp.sh'
+                sh 'cmod +x testapp.sh'
                 sh './testapp.sh'
             }
         }
     }
-
 }
 
